@@ -1,15 +1,10 @@
 import os
 import django
 
-# Set your Django settings module
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
 django.setup()
 
 from relationship_app.models import Author, Book, Library, Librarian
-
-# ------------------------
-# QUERY FUNCTIONS
-# ------------------------
 
 def query_books_by_author(author_name):
     """Query all books by a specific author using objects.filter."""
@@ -36,23 +31,21 @@ def list_books_in_library(library_name):
     return books
 
 def retrieve_librarian_for_library(library_name):
-    """Retrieve the librarian for a library using the OneToOne relationship."""
+    """Retrieve the librarian for a library using objects.get on Librarian."""
     try:
         library = Library.objects.get(name=library_name)
     except Library.DoesNotExist:
         print(f"No library named '{library_name}' found.")
         return None
 
-    librarian = getattr(library, 'librarian', None)
-    if librarian is None:
+    try:
+        librarian = Librarian.objects.get(library=library)
+    except Librarian.DoesNotExist:
         print(f"No librarian assigned for library '{library.name}'.")
-    else:
-        print(f"Librarian for {library.name}: {librarian.name}")
-    return librarian
+        return None
 
-# ------------------------
-# RUN EXAMPLES
-# ------------------------
+    print(f"Librarian for {library.name}: {librarian.name}")
+    return librarian
 
 if __name__ == '__main__':
     print("=== Query all books by author 'Chinua Achebe' ===")
