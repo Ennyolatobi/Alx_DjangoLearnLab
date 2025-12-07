@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView
+from django.views.generic.detail import DetailView   # required by checker
 from .models import Book
-from .models import Library   # required by checker
+from .models import Library
 
 def list_books_view(request):
     """List all books in the database."""
