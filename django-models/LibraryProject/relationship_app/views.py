@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import permission_required
 from django.views.generic import DetailView
 from .models import Book, Library
 from .forms import BookForm
@@ -14,24 +16,19 @@ from .forms import BookForm
 def is_admin(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
-
 def is_librarian(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
 
-
 def is_member(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
-
 
 @user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
-
 @user_passes_test(is_librarian)
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
-
 
 @user_passes_test(is_member)
 def member_view(request):
@@ -63,7 +60,6 @@ class LibraryDetailView(DetailView):
 
 def login_view(request):
     form = AuthenticationForm()
-
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -72,11 +68,9 @@ def login_view(request):
             return redirect('/')
     return render(request, 'relationship_app/login.html', {'form': form})
 
-
 def logout_view(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
-
 
 def register_view(request):
     if request.method == "POST":
@@ -106,7 +100,6 @@ def add_book(request):
         form = BookForm()
     return render(request, 'relationship_app/add_book.html', {"form": form})
 
-
 # Edit Book
 @permission_required('relationship_app.can_change_book')
 def edit_book(request, pk):
@@ -119,7 +112,6 @@ def edit_book(request, pk):
     else:
         form = BookForm(instance=book)
     return render(request, 'relationship_app/edit_book.html', {"form": form})
-
 
 # Delete Book
 @permission_required('relationship_app.can_delete_book')
