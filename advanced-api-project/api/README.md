@@ -31,3 +31,13 @@
 
 ### Filtering
 Filter books by title, publication year, or author ID:
+
+
+## Running Unit Tests
+
+All API endpoints are tested for CRUD, filtering, searching, ordering, and permissions.
+
+Run tests using:
+
+```bash
+python manage.py test api
