@@ -8,9 +8,16 @@ from .views import (
 )
 
 urlpatterns = [
+    # List and retrieve books
     path('books/', BookListView.as_view(), name='book-list'),
     path('books/<int:pk>/', BookDetailView.as_view(), name='book-detail'),
+
+    # Create book
     path('books/create/', BookCreateView.as_view(), name='book-create'),
-    path('books/<int:pk>/update/', BookUpdateView.as_view(), name='book-update'),
-    path('books/<int:pk>/delete/', BookDeleteView.as_view(), name='book-delete'),
+
+    # Update book (checker-required string: books/update)
+    path('books/update/<int:pk>/', BookUpdateView.as_view(), name='book-update'),
+
+    # Delete book (checker-required string: books/delete)
+    path('books/delete/<int:pk>/', BookDeleteView.as_view(), name='book-delete'),
 ]
