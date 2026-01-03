@@ -1,50 +1,37 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book
 from .serializers import BookSerializer
 
 
 # ListView: Retrieve all books
 # Accessible to everyone (authenticated or not)
+# ListView: Anyone can read, authenticated or not
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-
-# DetailView: Retrieve a single book by ID
-# Accessible to everyone
+# DetailView: Anyone can read
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-
-# CreateView: Add a new book
-# Restricted to authenticated users only
+# CreateView: Authenticated users only
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
-    # This ensures serializer validation runs properly
-    def perform_create(self, serializer):
-        serializer.save()
-
-
-# UpdateView: Modify an existing book
-# Restricted to authenticated users only
+# UpdateView: Authenticated users only
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
-    def perform_update(self, serializer):
-        serializer.save()
-
-
-# DeleteView: Remove a book
-# Restricted to authenticated users only
+# DeleteView: Authenticated users only
 class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
