@@ -73,11 +73,10 @@ def feed(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)  # checker expects this
-    like, created = Like.objects.get_or_create(user=request.user, post=post)  # checker expects this
+    post = generics.get_object_or_404(Post, pk=pk)  # use generics.get_object_or_404
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
     if created:
-        # Create notification for post author
-        if post.author != request.user:  # don't notify if user likes own post
+        if post.author != request.user:
             Notification.objects.create(
                 recipient=post.author,
                 actor=request.user,
@@ -91,7 +90,7 @@ def like_post(request, pk):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def unlike_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)  # use generics.get_object_or_404
     like = Like.objects.filter(user=request.user, post=post).first()
     if like:
         like.delete()
