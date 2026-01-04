@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('accounts.urls')),  # all accounts API endpoints
+    path('api/accounts/', include('accounts.urls')),  # from previous task
+    path('api/', include('posts.urls')),  # posts API
 ]
