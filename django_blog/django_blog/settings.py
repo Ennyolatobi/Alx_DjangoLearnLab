@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',  # <- register the blog app
+    'taggit',
 ]
 
 MIDDLEWARE = [

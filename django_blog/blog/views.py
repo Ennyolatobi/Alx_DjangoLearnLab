@@ -18,6 +18,9 @@ from django.views.generic import (
 
 from .forms import UserRegisterForm, PostForm
 from .models import Post
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from django.views.generic import ListView
 
 def register(request):
     """
@@ -142,3 +145,37 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('post-detail', kwargs={'pk': self.object.post.pk})
+
+
+# ============================
+# SEARCH FUNCTIONALITY
+# ============================
+
+class PostSearchView(ListView):
+    model = Post
+    template_name = 'blog/search_results.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')  # 'q' is the search input name in your form
+        if query:
+            return Post.objects.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(tags__name__icontains=query)
+            ).distinct()
+        return Post.objects.none()  # Return empty if no query
+
+
+# ============================
+# TAG FILTER VIEW
+# ============================
+
+class PostByTagView(ListView):
+    model = Post
+    template_name = 'blog/tag_posts.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name__iexact=tag_name)
