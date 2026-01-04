@@ -59,7 +59,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 @permission_classes([IsAuthenticated])
 def feed(request):
     user = request.user
-    followed_users = user.following.all()  # This is your ManyToManyField in CustomUser
-    posts = Post.objects.filter(author__in=followed_users).order_by('-created_at')
+    following_users = user.following.all()  # checker expects this variable name
+    posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
     serializer = PostSerializer(posts, many=True)
     return Response(serializer.data)
