@@ -1,34 +1,34 @@
 from rest_framework import generics, permissions
 from .serializers import RegisterSerializer
-from .models import CustomUser
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from django.contrib.auth import authenticate
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 # Registration view
 class RegisterView(generics.CreateAPIView):
-    queryset = CustomUser.objects.all()
+    queryset = User.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
-        user = CustomUser.objects.get(username=response.data['username'])
-        refresh = RefreshToken.for_user(user)
-        response.data['token'] = str(refresh.access_token)
+        user = User.objects.get(username=response.data['username'])
+        token = Token.objects.get(user=user)
+        response.data['token'] = token.key
         return response
 
-# Profile view (GET profile)
-class ProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+# Login view
+class LoginView(generics.GenericAPIView):
+    permission_classes = [permissions.AllowAny]
 
-    def get(self, request):
-        user = request.user
-        data = {
-            "username": user.username,
-            "email": user.email,
-            "bio": user.bio,
-            "profile_picture": user.profile_picture.url if user.profile_picture else None,
-            "followers": [f.username for f in user.followers.all()],
-        }
-        return Response(data)
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({"token": token.key})
+        return Response({"error": "Invalid credentials"}, status=400)
