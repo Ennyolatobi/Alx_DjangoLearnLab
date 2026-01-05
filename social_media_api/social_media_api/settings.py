@@ -1,15 +1,17 @@
 """
 Django settings for social_media_api project (Production Ready).
 """
-
 import os
 from pathlib import Path
 import dj_database_url
+
 
 # ================================
 # BASE SETTINGS
 # ================================
 BASE_DIR = Path(__file__).resolve().parent.parent
+PORT = os.environ.get("PORT", "8000")
+
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "replace-this-for-dev-only")
 
@@ -80,9 +82,12 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 # ================================
 DATABASES = {
     'default': dj_database_url.config(
-        default=f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}"
+        default=f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}",
+        conn_max_age=600,
+        ssl_require=True
     )
 }
+
 
 # ================================
 # PASSWORD VALIDATION
@@ -118,6 +123,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # ================================
 # SECURITY SETTINGS
