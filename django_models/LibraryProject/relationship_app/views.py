@@ -2,15 +2,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView
 from .models import Library, Book  # <-- combine imports here
-
-# ---------------- Function-based View ----------------
-def list_books(request):
-    """
-    Function-based view to list all books in the database.
-    """
-    books = Book.objects.all()  # Retrieve all books
-    return render(request, 'relationship_app/list_books.html', {'books': books})
-
 # ---------------- Class-based View ----------------
 class LibraryDetailView(DetailView):
     """
@@ -24,3 +15,12 @@ class LibraryDetailView(DetailView):
     def get_object(self):
         library_id = self.kwargs.get('pk')
         return get_object_or_404(Library, id=library_id)
+
+# ---------------- Function-based View ----------------
+def list_books(request):
+    """
+    Function-based view to list all books in the database.
+    """
+    books = Book.objects.all()  # Retrieve all books
+    return render(request, 'relationship_app/list_books.html', {'books': books})
+
