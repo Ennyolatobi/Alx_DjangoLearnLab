@@ -12,40 +12,61 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# --------------------------
+# BASE DIRECTORY
+# --------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+# --------------------------
+# SECRET KEY & DEBUG
+# --------------------------
 SECRET_KEY = 'django-insecure-6i!3a09hp%^=p*z8-5+-**kwl8!3a94k9t)q^0lk9dwpjbv4p)'
-
 
 DEBUG = False  # Disable debug mode for production security
 
-# ---------------- SECURITY SETTINGS ----------------
-# Security configurations added to protect against:
-# - XSS attacks
-# - Clickjacking
-# - MIME-type sniffing
-# - CSRF and session hijacking
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Update with your domain in production
 
+# --------------------------
+# CUSTOM USER MODEL
+# --------------------------
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# --------------------------
+# SECURITY SETTINGS
+# --------------------------
+# 1. Prevent XSS attacks using browser filters
 SECURE_BROWSER_XSS_FILTER = True
+
+# 2. Prevent MIME type sniffing
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# 3. Protect against clickjacking
 X_FRAME_OPTIONS = 'DENY'
 
+# 4. Enforce secure cookies
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-# Content Security Policy (CSP)
+# 5. Content Security Policy (CSP) - restrict sources of content
 CSP_DEFAULT_SRC = ("'self'",)
 
+# --------------------------
+# HTTPS SETTINGS
+# --------------------------
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
 
-ALLOWED_HOSTS = []
-AUTH_USER_MODEL = 'bookshelf.CustomUser'
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow HSTS preloading in browsers
 
-# Application definition
-
+# --------------------------
+# APPLICATION DEFINITION
+# --------------------------
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -64,10 +85,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [],  # Add template directories if needed
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,12 +101,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'advanced_features_and_security.wsgi.application'
+# --------------------------
+# WSGI APPLICATION
+# --------------------------
+WSGI_APPLICATION = 'LibraryProject.wsgi.application'  # Fixed path
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# --------------------------
+# DATABASE
+# --------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -92,10 +116,9 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
+# --------------------------
+# PASSWORD VALIDATION
+# --------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -111,25 +134,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# --------------------------
+# INTERNATIONALIZATION
+# --------------------------
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+# --------------------------
+# STATIC FILES
+# --------------------------
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
+# --------------------------
+# DEFAULT AUTO FIELD
+# --------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
