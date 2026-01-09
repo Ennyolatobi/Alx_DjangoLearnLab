@@ -19,7 +19,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6i!3a09hp%^=p*z8-5+-**kwl8!3a94k9t)q^0lk9dwpjbv4p)'
 
 
-DEBUG = True
+DEBUG = False  # Disable debug mode for production security
+
+# ---------------- SECURITY SETTINGS ----------------
+# Security configurations added to protect against:
+# - XSS attacks
+# - Clickjacking
+# - MIME-type sniffing
+# - CSRF and session hijacking
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Content Security Policy (CSP)
+CSP_DEFAULT_SRC = ("'self'",)
+
 
 ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
