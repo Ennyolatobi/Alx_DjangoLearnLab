@@ -1,3 +1,18 @@
+"""
+Permissions and Groups Setup:
+
+Custom permissions added to Book model:
+- can_view
+- can_create
+- can_edit
+- can_delete
+
+Suggested Groups:
+- Viewers: can_view
+- Editors: can_view, can_create, can_edit
+- Admins: all permissions
+"""
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.conf import settings  # needed to reference the custom user
@@ -33,11 +48,18 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-
 # Example of another model that references the custom user
 class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    class Meta:
+        permissions = [
+            ("can_view", "Can view book"),
+            ("can_create", "Can create book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
+        ]
 
     def __str__(self):
         return self.title
